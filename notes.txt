@@ -1,0 +1,48 @@
+npm init -y
+"type": "module",
+npm i -D typescript
+ "main": "server.ts",
+ npx tsc --init
+ npm install -D @types/node
+
+
+"rootDir": "./src",
+"outDir": "./dist",
+"module": "esnext",
+"moduleResolution":"bundler",
+"types": ["node"],
+,
+"include" : ["src/**/*.ts"],
+"exclude" : ["node_modules" , "dist"]
+
+npm i tsx
+
+package.json -> script -> "dev" : "tsx watch ./src/server.ts"
+npm run dev
+
+
+```
+import { createServer, IncomingMessage, Server, ServerResponse } from "node:http";
+
+const server: Server = createServer((req: IncomingMessage,res : ServerResponse)=>{
+    const url = req.url
+    const method = req.method
+    if(url==='/' && method === "GET"){
+        res.writeHead(200,{"Content-Type" : "application/json"});
+        res.end(JSON.stringify({message : "This is the root directory !"}));
+    }else if(url?.startsWith('/products')){
+        res.writeHead(200,{"Content-Type" : "application/json"});
+        res.end(JSON.stringify({message : "This is the products route"}));
+    }else{
+        res.writeHead(200,{"Content-Type" : "application/json"});
+        res.end(JSON.stringify({message : "This route is not defined"}));
+    }
+})
+
+server.listen(5000, ()=>{
+    console.log( "Server is Running !" )
+})
+```
+
+
+route , controller , service
