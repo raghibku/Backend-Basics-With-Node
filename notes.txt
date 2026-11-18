@@ -46,3 +46,6 @@ server.listen(5000, ()=>{
 
 
 route , controller , service
+
+
+npm i dotenv

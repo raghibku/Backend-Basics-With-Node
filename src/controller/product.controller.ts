@@ -3,7 +3,7 @@ import { createProduct, productService } from "../service/product.service";
 import type { IProduct } from "../types/product";
 import { bodyParser } from "../utils/parseBody";
 
-const productController = async(req: IncomingMessage, res: ServerResponse) => {
+const productController = async (req: IncomingMessage, res: ServerResponse) => {
     const url = req.url;
     const method = req.method;
     const urlParams = url?.split('/');
@@ -18,10 +18,10 @@ const productController = async(req: IncomingMessage, res: ServerResponse) => {
                 data: products,
             }
         ))
-    } 
+    }
     // find a product by id
     else if (method === "GET" && id !== null) {
-        const product = products.find((p: IProduct)=>p.id === id)
+        const product = products.find((p: IProduct) => p.id === id)
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(
             {
@@ -35,7 +35,7 @@ const productController = async(req: IncomingMessage, res: ServerResponse) => {
 
         const body = await bodyParser(req)
         const newProduct = {
-            id : Date.now(),
+            id: Date.now(),
             ...body
         }
         products.push(newProduct);
@@ -46,6 +46,31 @@ const productController = async(req: IncomingMessage, res: ServerResponse) => {
             {
                 message: "Products Retrived Successfully.",
                 data: newProduct
+            }
+        ))
+    }
+    // put product
+    else if (method === "PUT" && id !== null) {
+
+        const body = await bodyParser(req)
+        const index: number = products.findIndex((p: IProduct) => p.id === id);
+        if (index < 0) {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(
+                JSON.stringify({
+                    message: "Product Not Found!",
+                }),
+            );
+        }
+
+        products[index] = {id:products[index].id  , ...body}
+        createProduct(products);
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(
+            {
+                message: "Products Retrived Successfully.",
+                data: products[index]
             }
         ))
     }
